@@ -1,7 +1,7 @@
 tasks:
   - name: terraform
     before: |
-      source ./bin/installing_terraform.sh
+      source ./bin/installing_terraform
   - name: aws-cli
     env:
       AWS_CLI_AUTO_PROMPT: on-partial
