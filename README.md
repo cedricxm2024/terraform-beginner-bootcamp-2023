@@ -22,3 +22,7 @@ Terraform v1.13.4
 on linux_amd64
 ```
 bash script used for automation `#!/usr/bin/env bash`
+
+#### terraform basics and registry
+
+used a random provider (https://registry.terraform.io/providers)
