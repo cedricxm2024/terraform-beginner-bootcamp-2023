@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
+sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
 
 wget -O- https://apt.releases.hashicorp.com/gpg | \
 gpg --dearmor | \
@@ -13,4 +13,4 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashi
 
 sudo apt update
 
-sudo apt-get install terraform
+sudo apt-get install terraform -y
