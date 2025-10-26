@@ -1,3 +1,7 @@
-output "random_bucket_id" {
-  value = random_string.random_bucket.id
+output "bucket_id" {
+  value = module.video_game.gameing_bucket_id
+}
+
+output "bucket_name" {
+  value = module.video_game.gameing_bucket_name
 }
