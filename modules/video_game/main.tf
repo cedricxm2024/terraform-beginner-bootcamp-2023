@@ -32,3 +32,35 @@ resource "aws_s3_bucket" "gameing_bucket" {
   }
 }
 
+resource "aws_s3_bucket_website_configuration" "site" {
+  bucket = aws_s3_bucket.gameing_bucket.id
+
+  index_document {
+    suffix = "index.html"
+  }
+
+  error_document {
+    key = "error.html"
+  }
+}
+# Upload index.html
+resource "aws_s3_object" "index_html" {
+  bucket       = aws_s3_bucket.gameing_bucket.bucket
+  key          = "index.html"
+  source       = "${path.root}/public/index.html"
+  content_type = "text/html"
+  acl          = "public-read"
+
+    etag = filemd5("${path.root}/public/index.html")
+}
+
+# Upload error.html
+resource "aws_s3_object" "error_html" {
+  bucket       = aws_s3_bucket.gameing_bucket.bucket
+  key          = "error.html"
+  source       = "${path.root}/public/error.html"
+  content_type = "text/html"
+  acl          = "public-read"
+
+   etag = filemd5("${path.root}/public/error.html")
+}
