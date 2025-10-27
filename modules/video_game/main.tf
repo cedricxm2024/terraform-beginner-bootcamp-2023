@@ -48,17 +48,6 @@ resource "aws_s3_bucket_public_access_block" "gameing_bucket_block" {
   restrict_public_buckets = true
 }
 
-resource "aws_s3_bucket_website_configuration" "site" {
-  bucket = aws_s3_bucket.gameing_bucket.id
-
-  index_document {
-    suffix = "index.html"
-  }
-
-  error_document {
-    key = "error.html"
-  }
-}
 # Upload index.html
 resource "aws_s3_object" "index_html" {
   bucket       = aws_s3_bucket.gameing_bucket.bucket
@@ -99,11 +88,7 @@ resource "aws_s3_bucket_policy" "gameing_bucket_policy" {
         }
         Action   = "s3:GetObject"
         Resource = "${aws_s3_bucket.gameing_bucket.arn}/*"
-        Condition = {
-          StringEquals = {
-            "AWS:SourceArn" = aws_cloudfront_distribution.cdn.arn
-          }
-        }
+    
       }
     ]
   })
@@ -114,17 +99,12 @@ resource "aws_cloudfront_distribution" "cdn" {
   default_root_object = "index.html"
 
   origin {
-    domain_name = aws_s3_bucket_website_configuration.site.website_endpoint
+    domain_name = aws_s3_bucket.gameing_bucket.bucket_regional_domain_name
     origin_id   = aws_s3_bucket.gameing_bucket.id
 
     origin_access_control_id = aws_cloudfront_origin_access_control.oac.id
 
-    custom_origin_config {
-      http_port              = 80
-      https_port             = 443
-      origin_protocol_policy = "http-only"
-      origin_ssl_protocols   = ["TLSv1.2"]
-    }
+  
   }
 
   default_cache_behavior {
