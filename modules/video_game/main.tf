@@ -15,7 +15,7 @@ provider "aws" {
 resource "random_string" "suffix" {
   lower   = true
   upper   = false
-  length  = 44
+  length  = 12
   special = false
 }
 
@@ -29,6 +29,14 @@ resource "aws_s3_bucket" "gameing_bucket" {
     Environment = "Dev"
     Owner       = "Cedric"
     ManagedBy   = "Terraform"
+  }
+}
+
+resource "aws_s3_bucket_versioning" "gameing_bucket_versioning" {
+  bucket = aws_s3_bucket.gameing_bucket.id
+
+  versioning_configuration {
+    status = "Enabled"
   }
 }
 resource "aws_s3_bucket_public_access_block" "gameing_bucket_block" {
@@ -76,6 +84,29 @@ resource "aws_cloudfront_origin_access_control" "oac" {
   origin_access_control_origin_type = "s3"
   signing_behavior                  = "always"
   signing_protocol                  = "sigv4"
+}
+
+resource "aws_s3_bucket_policy" "gameing_bucket_policy" {
+  bucket = aws_s3_bucket.gameing_bucket.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "cloudfront.amazonaws.com"
+        }
+        Action   = "s3:GetObject"
+        Resource = "${aws_s3_bucket.gameing_bucket.arn}/*"
+        Condition = {
+          StringEquals = {
+            "AWS:SourceArn" = aws_cloudfront_distribution.cdn.arn
+          }
+        }
+      }
+    ]
+  })
 }
 
 resource "aws_cloudfront_distribution" "cdn" {
