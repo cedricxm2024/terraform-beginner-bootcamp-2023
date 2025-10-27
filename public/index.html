@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cedric's Gaming Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    table {
+      margin: 20px auto;
+      border-collapse: collapse;
+    }
+    td {
+      width: 60px;
+      height: 60px;
+      border: 2px solid #333;
+      font-size: 2rem;
+      text-align: center;
+      vertical-align: middle;
+      cursor: pointer;
+    }
+    td:hover {
+      background-color: #ddd;
+    }
+    #message {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    button {
+      margin-top: 10px;
+      padding: 8px 16px;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome to Cedric's Gaming Page</h1>
+  <p>Let's play Tic Tac Toe!</p>
+
+  <table id="board">
+    <tr>
+      <td data-cell="0"></td>
+      <td data-cell="1"></td>
+      <td data-cell="2"></td>
+    </tr>
+    <tr>
+      <td data-cell="3"></td>
+      <td data-cell="4"></td>
+      <td data-cell="5"></td>
+    </tr>
+    <tr>
+      <td data-cell="6"></td>
+      <td data-cell="7"></td>
+      <td data-cell="8"></td>
+    </tr>
+  </table>
+
+  <div id="message"></div>
+  <button onclick="resetGame()">Restart Game</button>
+
+  <script>
+    const board = Array(9).fill('');
+    let currentPlayer = 'X';
+    const cells = document.querySelectorAll('td');
+    const message = document.getElementById('message');
+
+    function checkWinner() {
+      const winPatterns = [
+        [0,1,2],[3,4,5],[6,7,8], // rows
+        [0,3,6],[1,4,7],[2,5,8], // columns
+        [0,4,8],[2,4,6]          // diagonals
+      ];
+
+      for (const pattern of winPatterns) {
+        const [a,b,c] = pattern;
+        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+          return board[a];
+        }
+      }
+
+      if (board.every(cell => cell)) return 'Tie';
+      return null;
+    }
+
+    function handleClick(e) {
+      const index = e.target.dataset.cell;
+      if (board[index] || checkWinner()) return;
+
+      board[index] = currentPlayer;
+      e.target.textContent = currentPlayer;
+
+      const winner = checkWinner();
+      if (winner) {
+        message.textContent = winner === 'Tie' ? "It's a tie!" : `${winner} wins!`;
+      } else {
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        message.textContent = `Current Player: ${currentPlayer}`;
+      }
+    }
+
+    function resetGame() {
+      board.fill('');
+      cells.forEach(cell => cell.textContent = '');
+      currentPlayer = 'X';
+      message.textContent = `Current Player: ${currentPlayer}`;
+    }
+
+    cells.forEach(cell => cell.addEventListener('click', handleClick));
+    message.textContent = `Current Player: ${currentPlayer}`;
+  </script>
+</body>
+</html>
