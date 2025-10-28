@@ -23,6 +23,8 @@ resource "random_string" "suffix" {
 resource "aws_s3_bucket" "gameing_bucket" {
   bucket = "cedric-gaming-site-${random_string.suffix.result}"
 
+  force_destroy = true
+
   tags = {
     UserUuid    = var.user_uuid
     Name        = "Cedric Game Site"
@@ -88,23 +90,25 @@ resource "aws_s3_bucket_policy" "gameing_bucket_policy" {
         }
         Action   = "s3:GetObject"
         Resource = "${aws_s3_bucket.gameing_bucket.arn}/*"
-    
+
       }
     ]
   })
+
+  depends_on = [aws_cloudfront_distribution.cdn]
 }
 
 resource "aws_cloudfront_distribution" "cdn" {
   enabled             = true
   default_root_object = "index.html"
 
+  lifecycle {
+    prevent_destroy = false
+  }
   origin {
-    domain_name = aws_s3_bucket.gameing_bucket.bucket_regional_domain_name
-    origin_id   = aws_s3_bucket.gameing_bucket.id
-
+    domain_name              = aws_s3_bucket.gameing_bucket.bucket_regional_domain_name
+    origin_id                = aws_s3_bucket.gameing_bucket.id
     origin_access_control_id = aws_cloudfront_origin_access_control.oac.id
-
-  
   }
 
   default_cache_behavior {
