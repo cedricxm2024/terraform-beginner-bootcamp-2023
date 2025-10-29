@@ -20,18 +20,16 @@ Reproducible Development Environments: Configured with Gitpod and VS Code Dev Co
 
 📂 Repository Structure
 .
-├── main.tf            # Root Terraform configuration and module calls
-├── variables.tf       # Input variables for Terraform
-├── outputs.tf         # Outputs from Terraform (S3 bucket info, CloudFront domain)
-├── providers.tf       # Terraform provider configuration (AWS & Random)
-├── modules/
-│   └── video_game/    # Module containing S3, CloudFront, and static website logic
-├── public/
-│   ├── index.html     # Tic Tac Toe game
-│   └── error.html     # Error page for the site
-├── .gitpod.yml        # Gitpod automation for installing Terraform & AWS CLI
-├── .gitignore         # Ignore Terraform state files, overrides, and sensitive data
-└── README.md          # This file
+ main.tf            # Root Terraform configuration and module calls
+ variables.tf       # Input variables for Terraform
+ outputs.tf         # Outputs from Terraform (S3 bucket info, CloudFront domain)
+ providers.tf       # Terraform provider configuration (AWS & Random)
+ modules/video_game/    # Module containing S3, CloudFront, and static website logic
+public/index.html     # Tic Tac Toe game
+   └── error.html     # Error page for the site
+.gitpod.yml        # Gitpod automation for installing Terraform & AWS CLI
+.gitignore         # Ignore Terraform state files, overrides, and sensitive data
+README.md          # This file
 
 🛠 Architecture & Implementation
 1. Terraform Modules
