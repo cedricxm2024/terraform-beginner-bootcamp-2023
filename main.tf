@@ -6,7 +6,11 @@ terraform {
     workspaces { 
       name = "terra-house-ent" 
     } 
-  } 
+     
+    hostname     = "app.terraform.io"
+  }
+
+  required_version = ">= 1.6.0"
 }
 
 module "video_game" {
