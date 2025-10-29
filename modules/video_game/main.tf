@@ -1,15 +1,15 @@
-terraform {
+terraform { 
+  
   required_providers {
     aws = {
       source  = "hashicorp/aws"
       version = "6.17.0"
     }
+    random = {
+      source  = "hashicorp/random"
+      version = "3.7.2"
+    }
   }
-}
-
-provider "aws" {
-  # Configuration options
-  region = "us-east-1"
 }
 
 resource "random_string" "suffix" {
@@ -90,7 +90,11 @@ resource "aws_s3_bucket_policy" "gameing_bucket_policy" {
         }
         Action   = "s3:GetObject"
         Resource = "${aws_s3_bucket.gameing_bucket.arn}/*"
-
+        Condition = {
+          StringEquals = {
+            "AWS:SourceArn" = aws_cloudfront_distribution.cdn.arn
+          }
+        }
       }
     ]
   })
